@@ -14,37 +14,39 @@ import TodoForm from "./ToDoForm";
     8. button to toggle all on/off
 */
 interface Todo {
-    id?:string;
-    text:string;
-    complete:boolean;
+  id: string;
+  text: string;
+  complete: boolean;
 }
 interface TodoListHandlers {
-   
-    handleChange?: (e: React.ChangeEvent<HTMLInputElement>)=>void;
-    onSubmit: (todo:Todo)=> ReactNode;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (todo: Todo) => ReactNode;
 }
 
-type TodoListState = {todos:Todo[]}
+type TodoListState = { todos: Todo[] };
 
-export default class TodoList extends React.Component<{},TodoListState> {
+export default class TodoList extends React.Component<{}, TodoListState> {
+  state: TodoListState = {
+    todos: [],
+  };
 
-    state:TodoListState = {
-        todos:[]
-    }
+  addTodo = (todo: Todo) => {
+    this.setState({
+      todos: [todo, ...this.state.todos],
+    });
+  };
 
-    addTodo = (todo:Todo) => {
-
-        this.setState({
-            todos:[todo,...this.state.todos]
-        })
-
-    }
-
-    render(){
-        return(
-             <div>
-                 <TodoForm onSubmit={this.addTodo}/>
-                 {this.state.todos.map(todo=>( <div key={todo.id}> {todo.text}</div>))}
-            </div>)
-    }
+  render() {
+    return (
+      <div>
+        <TodoForm onSubmit={this.addTodo} />
+        {this.state.todos.map((todo) => {
+          {
+            console.log("todolist", todo);
+          }
+          return <div key={todo.id}> {todo.text}</div>;
+        })}
+      </div>
+    );
+  }
 }
