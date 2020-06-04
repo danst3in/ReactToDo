@@ -65,13 +65,7 @@ export default class TodoList extends React.Component<{}, TodoListState> {
           />
         ))}
         <div>
-          todos left:{" "}
-          {this.state.todos.reduce((acc, next) => {
-            if (!next.complete) {
-              acc += 1;
-            }
-            return acc;
-          }, 0)}
+          todos left: {this.state.todos.filter((x) => !x.complete).length}
         </div>
       </div>
     );
