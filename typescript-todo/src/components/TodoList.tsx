@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import TodoForm from "./ToDoForm";
 
 /*
@@ -13,6 +13,16 @@ import TodoForm from "./ToDoForm";
         - only show if at least one todo completed
     8. button to toggle all on/off
 */
+interface Todo {
+    id?:string;
+    text:string;
+    complete:boolean;
+}
+interface TodoListHandlers {
+   
+    handleChange?: (e: React.ChangeEvent<HTMLInputElement>)=>void;
+    onSubmit: (todo:Todo)=> ReactNode;
+}
 
 type TodoListState = {todos:Todo[]}
 
@@ -22,7 +32,7 @@ export default class TodoList extends React.Component<{},TodoListState> {
         todos:[]
     }
 
-    addTodo = (todo) => {
+    addTodo = (todo:Todo) => {
 
         this.setState({
             todos:[todo,...this.state.todos]
@@ -34,7 +44,7 @@ export default class TodoList extends React.Component<{},TodoListState> {
         return(
              <div>
                  <TodoForm onSubmit={this.addTodo}/>
-                 {JSON.stringify(this.state.todos)}
+                 {this.state.todos.map(todo=>( <div key={todo.id}> {todo.text}</div>))}
             </div>)
     }
 }
