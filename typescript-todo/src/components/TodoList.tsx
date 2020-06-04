@@ -24,11 +24,15 @@ import Todo from "./ToDo";
 //   onSubmit: (todo: Todo) => ReactNode;
 // }
 
-type TodoListState = { todos: Todos[] };
+type TodoListState = {
+  todos: Todos[];
+  todosToShow: string;
+};
 
 export default class TodoList extends React.Component<{}, TodoListState> {
   state: TodoListState = {
     todos: [],
+    todosToShow: "all",
   };
 
   addTodo = (todo: Todos) => {
@@ -53,19 +57,52 @@ export default class TodoList extends React.Component<{}, TodoListState> {
     });
   };
 
+  updateTodoToShow = (t: string) => {
+    this.setState({
+      todosToShow: t,
+    });
+  };
+
+  handleDeleteTodo = (id?: string): void => {
+    this.setState({
+      todos: this.state.todos.filter((todo) => todo.id !== id),
+    });
+  };
+
   render() {
+    let todos: Todos[] = [];
+
+    if (this.state.todosToShow === "all") {
+      todos = this.state.todos;
+    } else if (this.state.todosToShow === "active") {
+      todos = this.state.todos.filter((x) => !x.complete);
+    } else if (this.state.todosToShow === "complete") {
+      todos = this.state.todos.filter((x) => x.complete);
+    }
+
     return (
       <div>
         <TodoForm onSubmit={this.addTodo} />
-        {this.state.todos.map((todo) => (
+        {todos.map((todo) => (
           <Todo
             key={todo.id}
             toggleComplete={() => this.toggleComplete(todo.id)}
             todo={todo}
+            onDelete={() => this.handleDeleteTodo(todo.id)}
           />
         ))}
-        <div>
+        <br />
+        <div style={{ display: "flex", justifyContent: "center" }}>
           todos left: {this.state.todos.filter((x) => !x.complete).length}
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button onClick={() => this.updateTodoToShow("all")}>all</button>
+          <button onClick={() => this.updateTodoToShow("active")}>
+            active
+          </button>
+          <button onClick={() => this.updateTodoToShow("complete")}>
+            complete
+          </button>
         </div>
       </div>
     );
