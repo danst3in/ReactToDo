@@ -27,18 +27,20 @@ import Todo from "./ToDo";
 type TodoListState = {
   todos: Todos[];
   todosToShow: string;
+  toggleAllComplete: boolean;
 };
 
 export default class TodoList extends React.Component<{}, TodoListState> {
   state: TodoListState = {
     todos: [],
     todosToShow: "all",
+    toggleAllComplete: true,
   };
 
   addTodo = (todo: Todos) => {
-    this.setState({
-      todos: [todo, ...this.state.todos],
-    });
+    this.setState((state) => ({
+      todos: [todo, ...state.todos],
+    }));
   };
 
   toggleComplete = (id?: string) => {
@@ -64,15 +66,15 @@ export default class TodoList extends React.Component<{}, TodoListState> {
   };
 
   handleDeleteTodo = (id?: string): void => {
-    this.setState({
-      todos: this.state.todos.filter((todo) => todo.id !== id),
-    });
+    this.setState((state) => ({
+      todos: state.todos.filter((todo) => todo.id !== id),
+    }));
   };
 
   removeAllComplete = (): void => {
-    this.setState({
-      todos: this.state.todos.filter((todo) => !todo.complete),
-    });
+    this.setState((state) => ({
+      todos: state.todos.filter((todo) => !todo.complete),
+    }));
   };
 
   render() {
@@ -108,6 +110,22 @@ export default class TodoList extends React.Component<{}, TodoListState> {
           </button>
           <button onClick={() => this.updateTodoToShow("complete")}>
             complete
+          </button>
+        </div>
+        <br />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button
+            onClick={() =>
+              this.setState((state) => ({
+                todos: state.todos.map((todo) => ({
+                  ...todo,
+                  complete: state.toggleAllComplete,
+                })),
+                toggleAllComplete: !state.toggleAllComplete,
+              }))
+            }
+          >
+            Toggle All On/Off: {`${this.state.toggleAllComplete}`}{" "}
           </button>
         </div>
         <br />
