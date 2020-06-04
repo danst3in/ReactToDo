@@ -9,14 +9,14 @@ interface TodoFormProps {
   onSubmit: (e: any) => void;
 }
 
-interface Todo {
+export interface Todos {
   id?: string;
   text: string;
   complete: boolean;
   [x: string]: any;
 }
 
-type TodoFormState = Todo;
+type TodoFormState = Todos;
 
 // trying to avoid onSubmit being type any
 // type SpecialEvent = {

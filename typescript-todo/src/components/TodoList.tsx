@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
-import TodoForm from "./ToDoForm";
+import TodoForm, { Todos } from "./ToDoForm";
+import Todo from "./ToDo";
 
 /*
     Requirements
@@ -13,26 +14,42 @@ import TodoForm from "./ToDoForm";
         - only show if at least one todo completed
     8. button to toggle all on/off
 */
-interface Todo {
-  id: string;
-  text: string;
-  complete: boolean;
-}
-interface TodoListHandlers {
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (todo: Todo) => ReactNode;
-}
+// interface Todo {
+//   id: string;
+//   text: string;
+//   complete: boolean;
+// }
+// interface TodoListHandlers {
+//   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+//   onSubmit: (todo: Todo) => ReactNode;
+// }
 
-type TodoListState = { todos: Todo[] };
+type TodoListState = { todos: Todos[] };
 
 export default class TodoList extends React.Component<{}, TodoListState> {
   state: TodoListState = {
     todos: [],
   };
 
-  addTodo = (todo: Todo) => {
+  addTodo = (todo: Todos) => {
     this.setState({
       todos: [todo, ...this.state.todos],
+    });
+  };
+
+  toggleComplete = (id?: string) => {
+    this.setState({
+      todos: this.state.todos.map((todo) => {
+        if (todo.id === id) {
+          //update
+          return {
+            ...todo,
+            complete: !todo.complete,
+          };
+        } else {
+          return todo;
+        }
+      }),
     });
   };
 
@@ -40,12 +57,13 @@ export default class TodoList extends React.Component<{}, TodoListState> {
     return (
       <div>
         <TodoForm onSubmit={this.addTodo} />
-        {this.state.todos.map((todo) => {
-          {
-            console.log("todolist", todo);
-          }
-          return <div key={todo.id}> {todo.text}</div>;
-        })}
+        {this.state.todos.map((todo) => (
+          <Todo
+            key={todo.id}
+            toggleComplete={() => this.toggleComplete(todo.id)}
+            todo={todo}
+          />
+        ))}
       </div>
     );
   }
